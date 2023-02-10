@@ -37,9 +37,18 @@ jobs:
   build_my_app:
     runs-on: ubuntu-latest
     needs: [lint_my_app, test_my_app]
+    strategy:
+      matrix:
+        node-version: [14, 16, 18]
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Get the repository code
         uses: actions/checkout@v3
+      - name: Install NodeJs
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Cache deps
         uses: actions/cache@v3
         with:
